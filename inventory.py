@@ -49,3 +49,12 @@ class Inventory:
         product.quantity = new_quantity
 
         return True, "Stock updated successfully."
+
+    def get_low_stock_products(self):
+        low_stock_products = []
+
+        for product in self.products:
+            if product.quantity <= product.reorder_level:
+                low_stock_products.append(product)
+
+        return low_stock_products

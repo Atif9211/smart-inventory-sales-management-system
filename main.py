@@ -6,15 +6,16 @@ inventory = Inventory()
 
 
 def show_menu():
-    print("\n" + "=" * 50)
+    print("\n" + "=" * 55)
     print(" SMART INVENTORY & SALES MANAGEMENT SYSTEM")
-    print("=" * 50)
+    print("=" * 55)
     print("1. Add Product")
     print("2. View All Products")
     print("3. Search Product")
     print("4. Update Product Stock")
-    print("5. Exit")
-    print("=" * 50)
+    print("5. View Low-Stock Products")
+    print("6. Exit")
+    print("=" * 55)
 
 
 def add_product():
@@ -98,6 +99,25 @@ def update_stock():
         print(f"New quantity: {product.quantity}")
 
 
+def view_low_stock_products():
+    low_stock_products = inventory.get_low_stock_products()
+
+    if len(low_stock_products) == 0:
+        print("\nAll products have sufficient stock.")
+        return
+
+    print("\nLOW-STOCK ALERT")
+    print("=" * 80)
+
+    for product in low_stock_products:
+        print(
+            f"ID: {product.product_id} | "
+            f"Name: {product.name} | "
+            f"Current Stock: {product.quantity} | "
+            f"Reorder Level: {product.reorder_level}"
+        )
+
+
 while True:
     show_menu()
 
@@ -116,6 +136,9 @@ while True:
         update_stock()
 
     elif choice == "5":
+        view_low_stock_products()
+
+    elif choice == "6":
         print("\nThank you for using the system.")
         break
 
