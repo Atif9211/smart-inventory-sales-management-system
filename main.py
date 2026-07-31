@@ -111,26 +111,17 @@ def show_menu():
     print("=" * 60)
 
     print("1. Add Product")
-
     print("2. View All Products")
-
     print("3. Search Product")
-
     print("4. Update Product Stock")
-
     print("5. View Low-Stock Products")
-
     print("6. Record a Sale")
-
     print("7. View Sales History")
-
     print("8. View Sales Dashboard")
-
     print("9. Update Product Details")
-
     print("10. Delete Product")
-
-    print("11. Exit")
+    print("11. View Detailed Business Report")
+    print("12. Exit")
 
     print("=" * 60)
 
@@ -251,7 +242,6 @@ def update_stock():
     )
 
     print("\n1. Add Stock")
-
     print("2. Remove Stock")
 
     while True:
@@ -626,6 +616,139 @@ def delete_product_from_system():
     )
 
 
+def show_business_report():
+
+    report = (
+        inventory
+        .get_business_report()
+    )
+
+    print(
+        "\nDETAILED BUSINESS REPORT"
+    )
+
+    print("=" * 65)
+
+    print(
+        "\nINVENTORY SUMMARY"
+    )
+
+    print("-" * 65)
+
+    print(
+        f"Total Products: "
+        f"{report['total_products']}"
+    )
+
+    print(
+        f"Total Stock Units: "
+        f"{report['total_stock_units']}"
+    )
+
+    print(
+        f"Low-Stock Products: "
+        f"{report['low_stock_count']}"
+    )
+
+    print(
+        f"Inventory Cost Value: "
+        f"Rs. "
+        f"{report['inventory_cost_value']:.2f}"
+    )
+
+    print(
+        f"Inventory Selling Value: "
+        f"Rs. "
+        f"{report['inventory_selling_value']:.2f}"
+    )
+
+    print(
+        f"Potential Inventory Profit: "
+        f"Rs. "
+        f"{report['potential_inventory_profit']:.2f}"
+    )
+
+    print(
+        "\nSALES SUMMARY"
+    )
+
+    print("-" * 65)
+
+    print(
+        f"Total Sales Transactions: "
+        f"{report['total_sales']}"
+    )
+
+    print(
+        f"Total Units Sold: "
+        f"{report['total_units_sold']}"
+    )
+
+    print(
+        f"Total Revenue: "
+        f"Rs. "
+        f"{report['total_revenue']:.2f}"
+    )
+
+    print(
+        f"Total Profit: "
+        f"Rs. "
+        f"{report['total_profit']:.2f}"
+    )
+
+    print(
+        f"Average Sale Value: "
+        f"Rs. "
+        f"{report['average_sale_value']:.2f}"
+    )
+
+    print(
+        "\nPRODUCT PERFORMANCE"
+    )
+
+    print("-" * 65)
+
+    if (
+        report[
+            "best_selling_product"
+        ]
+        is None
+    ):
+
+        print(
+            "Best-Selling Product: "
+            "No sales recorded"
+        )
+
+    else:
+
+        print(
+            f"Best-Selling Product: "
+            f"{report['best_selling_product']}"
+        )
+
+    if (
+        report[
+            "most_profitable_product"
+        ]
+        is None
+    ):
+
+        print(
+            "Most Profitable Product: "
+            "No sales recorded"
+        )
+
+    else:
+
+        print(
+            f"Most Profitable Product: "
+            f"{report['most_profitable_product']}"
+        )
+
+    print("=" * 65)
+
+
 while True:
 
     show_menu()
@@ -676,6 +799,10 @@ while True:
 
     elif choice == "11":
 
+        show_business_report()
+
+    elif choice == "12":
+
         print(
             "\nThank you for using "
             "the system."
@@ -688,5 +815,5 @@ while True:
         print(
             "\nInvalid choice. "
             "Please enter a number "
-            "from 1 to 11."
+            "from 1 to 12."
         )

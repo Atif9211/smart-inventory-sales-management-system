@@ -58,6 +58,7 @@ class Inventory:
         )
 
         if existing_product is not None:
+
             print(
                 "\nA product with this ID "
                 "already exists."
@@ -77,6 +78,7 @@ class Inventory:
     def view_products(self):
 
         if len(self.products) == 0:
+
             print(
                 "\nNo products are available."
             )
@@ -144,19 +146,14 @@ class Inventory:
             )
 
         product.name = name
-
         product.category = category
-
         product.purchase_price = (
             purchase_price
         )
-
         product.selling_price = (
             selling_price
         )
-
         product.quantity = quantity
-
         product.reorder_level = (
             reorder_level
         )
@@ -386,9 +383,7 @@ class Inventory:
             )
 
         total_units_sold = 0
-
         total_revenue = 0
-
         total_profit = 0
 
         for sale in self.sales:
@@ -460,3 +455,201 @@ class Inventory:
             "best_selling_product":
                 best_selling_product
         }
+
+    def get_business_report(self):
+
+        total_products = len(
+            self.products
+        )
+
+        total_stock_units = 0
+
+        inventory_cost_value = 0
+
+        inventory_selling_value = 0
+
+        for product in self.products:
+
+            total_stock_units += (
+                product.quantity
+            )
+
+            inventory_cost_value += (
+                product.purchase_price
+                * product.quantity
+            )
+
+            inventory_selling_value += (
+                product.selling_price
+                * product.quantity
+            )
+
+        potential_inventory_profit = (
+            inventory_selling_value
+            - inventory_cost_value
+        )
+
+        low_stock_products = (
+            self.get_low_stock_products()
+        )
+
+        low_stock_count = len(
+            low_stock_products
+        )
+
+        total_units_sold = 0
+
+        total_revenue = 0
+
+        total_profit = 0
+
+        product_quantity_sales = {}
+
+        product_profit_sales = {}
+
+        for sale in self.sales:
+
+            product_name = (
+                sale["product_name"]
+            )
+
+            quantity_sold = (
+                sale["quantity_sold"]
+            )
+
+            sale_profit = (
+                sale["total_profit"]
+            )
+
+            total_units_sold += (
+                quantity_sold
+            )
+
+            total_revenue += (
+                sale["total_amount"]
+            )
+
+            total_profit += (
+                sale_profit
+            )
+
+            if (
+                product_name
+                in product_quantity_sales
+            ):
+
+                product_quantity_sales[
+                    product_name
+                ] += quantity_sold
+
+            else:
+
+                product_quantity_sales[
+                    product_name
+                ] = quantity_sold
+
+            if (
+                product_name
+                in product_profit_sales
+            ):
+
+                product_profit_sales[
+                    product_name
+                ] += sale_profit
+
+            else:
+
+                product_profit_sales[
+                    product_name
+                ] = sale_profit
+
+        total_sales = len(
+            self.sales
+        )
+
+        average_sale_value = 0
+
+        if total_sales > 0:
+
+            average_sale_value = (
+                total_revenue
+                / total_sales
+            )
+
+        best_selling_product = None
+
+        if (
+            len(
+                product_quantity_sales
+            )
+            > 0
+        ):
+
+            best_selling_product = max(
+                product_quantity_sales,
+                key=(
+                    product_quantity_sales
+                    .get
+                )
+            )
+
+        most_profitable_product = None
+
+        if (
+            len(
+                product_profit_sales
+            )
+            > 0
+        ):
+
+            most_profitable_product = max(
+                product_profit_sales,
+                key=(
+                    product_profit_sales
+                    .get
+                )
+            )
+
+        report = {
+
+            "total_products":
+                total_products,
+
+            "total_stock_units":
+                total_stock_units,
+
+            "low_stock_count":
+                low_stock_count,
+
+            "total_sales":
+                total_sales,
+
+            "total_units_sold":
+                total_units_sold,
+
+            "total_revenue":
+                total_revenue,
+
+            "total_profit":
+                total_profit,
+
+            "average_sale_value":
+                average_sale_value,
+
+            "best_selling_product":
+                best_selling_product,
+
+            "most_profitable_product":
+                most_profitable_product,
+
+            "inventory_cost_value":
+                inventory_cost_value,
+
+            "inventory_selling_value":
+                inventory_selling_value,
+
+            "potential_inventory_profit":
+                potential_inventory_profit
+        }
+
+        return report
