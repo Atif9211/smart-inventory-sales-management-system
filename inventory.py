@@ -1,6 +1,7 @@
 class Inventory:
     def __init__(self):
         self.products = []
+        self.sales = []
 
     def add_product(self, product):
         self.products.append(product)
@@ -58,3 +59,54 @@ class Inventory:
                 low_stock_products.append(product)
 
         return low_stock_products
+
+    def record_sale(self, product_id, quantity_sold):
+        product = self.search_product(str(product_id))
+
+        if product is None:
+            return False, "Product not found.", None
+
+        if quantity_sold <= 0:
+            return False, "Quantity must be greater than zero.", None
+
+        if quantity_sold > product.quantity:
+            return False, "Not enough stock available.", None
+
+        total_amount = product.selling_price * quantity_sold
+
+        profit_per_item = (
+            product.selling_price - product.purchase_price
+        )
+
+        total_profit = profit_per_item * quantity_sold
+
+        product.quantity -= quantity_sold
+
+        sale = {
+            "product_id": product.product_id,
+            "product_name": product.name,
+            "quantity_sold": quantity_sold,
+            "total_amount": total_amount,
+            "total_profit": total_profit
+        }
+
+        self.sales.append(sale)
+
+        return True, "Sale recorded successfully.", sale
+
+    def view_sales(self):
+        if len(self.sales) == 0:
+            print("\nNo sales have been recorded.")
+            return
+
+        print("\nSALES HISTORY")
+        print("=" * 90)
+
+        for number, sale in enumerate(self.sales, start=1):
+            print(
+                f"Sale #{number} | "
+                f"Product: {sale['product_name']} | "
+                f"Quantity: {sale['quantity_sold']} | "
+                f"Amount: Rs. {sale['total_amount']:.2f} | "
+                f"Profit: Rs. {sale['total_profit']:.2f}"
+            )

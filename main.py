@@ -14,7 +14,9 @@ def show_menu():
     print("3. Search Product")
     print("4. Update Product Stock")
     print("5. View Low-Stock Products")
-    print("6. Exit")
+    print("6. Record a Sale")
+    print("7. View Sales History")
+    print("8. Exit")
     print("=" * 55)
 
 
@@ -118,6 +120,59 @@ def view_low_stock_products():
         )
 
 
+def record_sale():
+    print("\nRecord a New Sale")
+
+    product_id = input("Enter product ID: ")
+
+    product = inventory.search_product(product_id)
+
+    if product is None:
+        print("\nProduct not found.")
+        return
+
+    print(f"\nProduct: {product.name}")
+    print(f"Selling price: Rs. {product.selling_price:.2f}")
+    print(f"Available stock: {product.quantity}")
+
+    quantity_sold = int(
+        input("Enter quantity sold: ")
+    )
+
+    success, message, sale = inventory.record_sale(
+        product_id,
+        quantity_sold
+    )
+
+    print(f"\n{message}")
+
+    if success:
+        print("-" * 40)
+        print(f"Product: {sale['product_name']}")
+        print(f"Quantity sold: {sale['quantity_sold']}")
+
+        print(
+            f"Total amount: "
+            f"Rs. {sale['total_amount']:.2f}"
+        )
+
+        print(
+            f"Total profit: "
+            f"Rs. {sale['total_profit']:.2f}"
+        )
+
+        print(
+            f"Remaining stock: "
+            f"{product.quantity}"
+        )
+
+        print("-" * 40)
+
+
+def view_sales():
+    inventory.view_sales()
+
+
 while True:
     show_menu()
 
@@ -139,6 +194,12 @@ while True:
         view_low_stock_products()
 
     elif choice == "6":
+        record_sale()
+
+    elif choice == "7":
+        view_sales()
+
+    elif choice == "8":
         print("\nThank you for using the system.")
         break
 
