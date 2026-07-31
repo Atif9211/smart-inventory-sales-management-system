@@ -1,7 +1,13 @@
 from product import Product
 from inventory import Inventory
+from database import create_database
 
 
+# Create the SQLite database and products table
+create_database()
+
+
+# Create the Inventory object
 inventory = Inventory()
 
 
@@ -228,6 +234,7 @@ def show_dashboard():
     print("=" * 55)
 
 
+# Main program loop
 while True:
     show_menu()
 
