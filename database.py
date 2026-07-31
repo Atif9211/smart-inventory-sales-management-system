@@ -87,3 +87,25 @@ def load_products():
     connection.close()
 
     return products
+
+
+def update_product_quantity(
+    product_id,
+    new_quantity
+):
+    connection = get_connection()
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        UPDATE products
+        SET quantity = ?
+        WHERE product_id = ?
+    """, (
+        new_quantity,
+        product_id
+    ))
+
+    connection.commit()
+
+    connection.close()

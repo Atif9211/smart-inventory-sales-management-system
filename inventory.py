@@ -1,5 +1,10 @@
 from product import Product
-from database import save_product, load_products
+
+from database import (
+    save_product,
+    load_products,
+    update_product_quantity
+)
 
 
 class Inventory:
@@ -64,7 +69,10 @@ class Inventory:
                 f"{product.selling_price:.2f}"
             )
 
-    def search_product(self, search_value):
+    def search_product(
+        self,
+        search_value
+    ):
         search_value = search_value.lower()
 
         for product in self.products:
@@ -88,7 +96,10 @@ class Inventory:
         )
 
         if product is None:
-            return False, "Product not found."
+            return (
+                False,
+                "Product not found."
+            )
 
         new_quantity = (
             product.quantity
@@ -103,9 +114,15 @@ class Inventory:
 
         product.quantity = new_quantity
 
+        update_product_quantity(
+            product.product_id,
+            new_quantity
+        )
+
         return (
             True,
-            "Stock updated successfully."
+            "Stock updated and saved "
+            "to the database successfully."
         )
 
     def get_low_stock_products(self):
