@@ -34,3 +34,18 @@ class Inventory:
                 return product
 
         return None
+
+    def update_stock(self, product_id, quantity_change):
+        product = self.search_product(str(product_id))
+
+        if product is None:
+            return False, "Product not found."
+
+        new_quantity = product.quantity + quantity_change
+
+        if new_quantity < 0:
+            return False, "Stock cannot be negative."
+
+        product.quantity = new_quantity
+
+        return True, "Stock updated successfully."

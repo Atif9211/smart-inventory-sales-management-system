@@ -6,14 +6,15 @@ inventory = Inventory()
 
 
 def show_menu():
-    print("\n" + "=" * 45)
-    print(" SMART INVENTORY MANAGEMENT SYSTEM")
-    print("=" * 45)
+    print("\n" + "=" * 50)
+    print(" SMART INVENTORY & SALES MANAGEMENT SYSTEM")
+    print("=" * 50)
     print("1. Add Product")
     print("2. View All Products")
     print("3. Search Product")
-    print("4. Exit")
-    print("=" * 45)
+    print("4. Update Product Stock")
+    print("5. Exit")
+    print("=" * 50)
 
 
 def add_product():
@@ -55,6 +56,48 @@ def search_product():
         print("\nProduct not found.")
 
 
+def update_stock():
+    print("\nUpdate Product Stock")
+
+    product_id = input("Enter product ID: ")
+
+    product = inventory.search_product(product_id)
+
+    if product is None:
+        print("\nProduct not found.")
+        return
+
+    print(f"\nProduct: {product.name}")
+    print(f"Current quantity: {product.quantity}")
+
+    print("\n1. Add Stock")
+    print("2. Remove Stock")
+
+    choice = input("Choose an option: ")
+
+    quantity = int(input("Enter quantity: "))
+
+    if choice == "1":
+        quantity_change = quantity
+
+    elif choice == "2":
+        quantity_change = -quantity
+
+    else:
+        print("\nInvalid option.")
+        return
+
+    success, message = inventory.update_stock(
+        product_id,
+        quantity_change
+    )
+
+    print(f"\n{message}")
+
+    if success:
+        print(f"New quantity: {product.quantity}")
+
+
 while True:
     show_menu()
 
@@ -70,6 +113,9 @@ while True:
         search_product()
 
     elif choice == "4":
+        update_stock()
+
+    elif choice == "5":
         print("\nThank you for using the system.")
         break
 
