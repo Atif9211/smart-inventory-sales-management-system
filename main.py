@@ -3,58 +3,77 @@ from inventory import Inventory
 from database import create_database
 
 
-# Create the SQLite database and tables
 create_database()
 
-
-# Create the Inventory object
 inventory = Inventory()
 
 
-def get_integer(message, minimum=None):
+def get_integer(
+    message,
+    minimum=None
+):
+
     while True:
+
         try:
-            value = int(input(message))
+
+            value = int(
+                input(message)
+            )
 
             if (
                 minimum is not None
                 and value < minimum
             ):
+
                 print(
                     f"Please enter a value "
-                    f"greater than or equal to "
-                    f"{minimum}."
+                    f"greater than or equal "
+                    f"to {minimum}."
                 )
+
                 continue
 
             return value
 
         except ValueError:
+
             print(
                 "Invalid input. "
                 "Please enter a whole number."
             )
 
 
-def get_float(message, minimum=None):
+def get_float(
+    message,
+    minimum=None
+):
+
     while True:
+
         try:
-            value = float(input(message))
+
+            value = float(
+                input(message)
+            )
 
             if (
                 minimum is not None
                 and value < minimum
             ):
+
                 print(
                     f"Please enter a value "
-                    f"greater than or equal to "
-                    f"{minimum}."
+                    f"greater than or equal "
+                    f"to {minimum}."
                 )
+
                 continue
 
             return value
 
         except ValueError:
+
             print(
                 "Invalid input. "
                 "Please enter a valid number."
@@ -62,41 +81,68 @@ def get_float(message, minimum=None):
 
 
 def get_text(message):
+
     while True:
-        value = input(message).strip()
+
+        value = input(
+            message
+        ).strip()
 
         if value == "":
+
             print(
                 "This field cannot be empty."
             )
+
             continue
 
         return value
 
 
 def show_menu():
-    print("\n" + "=" * 55)
-    print(" SMART INVENTORY & SALES MANAGEMENT SYSTEM")
-    print("=" * 55)
+
+    print("\n" + "=" * 60)
+
+    print(
+        " SMART INVENTORY & "
+        "SALES MANAGEMENT SYSTEM"
+    )
+
+    print("=" * 60)
+
     print("1. Add Product")
+
     print("2. View All Products")
+
     print("3. Search Product")
+
     print("4. Update Product Stock")
+
     print("5. View Low-Stock Products")
+
     print("6. Record a Sale")
+
     print("7. View Sales History")
+
     print("8. View Sales Dashboard")
-    print("9. Exit")
-    print("=" * 55)
+
+    print("9. Update Product Details")
+
+    print("10. Delete Product")
+
+    print("11. Exit")
+
+    print("=" * 60)
 
 
 def add_product():
+
     print("\nADD NEW PRODUCT")
-    print("-" * 55)
+    print("-" * 50)
 
     product_id = get_integer(
         "Enter product ID: ",
-        minimum=1
+        1
     )
 
     name = get_text(
@@ -109,22 +155,22 @@ def add_product():
 
     purchase_price = get_float(
         "Enter purchase price: ",
-        minimum=0
+        0
     )
 
     selling_price = get_float(
         "Enter selling price: ",
-        minimum=0
+        0
     )
 
     quantity = get_integer(
         "Enter quantity: ",
-        minimum=0
+        0
     )
 
     reorder_level = get_integer(
         "Enter reorder level: ",
-        minimum=0
+        0
     )
 
     product = Product(
@@ -137,20 +183,26 @@ def add_product():
         reorder_level
     )
 
-    inventory.add_product(product)
+    inventory.add_product(
+        product
+    )
 
 
 def search_product():
+
     search_value = get_text(
         "\nEnter product ID or "
         "product name: "
     )
 
-    product = inventory.search_product(
-        search_value
+    product = (
+        inventory.search_product(
+            search_value
+        )
     )
 
     if product is not None:
+
         print(
             "\nProduct found successfully."
         )
@@ -158,27 +210,39 @@ def search_product():
         product.display_product()
 
     else:
-        print("\nProduct not found.")
+
+        print(
+            "\nProduct not found."
+        )
 
 
 def update_stock():
-    print("\nUPDATE PRODUCT STOCK")
-    print("-" * 55)
+
+    print(
+        "\nUPDATE PRODUCT STOCK"
+    )
 
     product_id = get_text(
         "Enter product ID: "
     )
 
-    product = inventory.search_product(
-        product_id
+    product = (
+        inventory.search_product(
+            product_id
+        )
     )
 
     if product is None:
-        print("\nProduct not found.")
+
+        print(
+            "\nProduct not found."
+        )
+
         return
 
     print(
-        f"\nProduct: {product.name}"
+        f"\nProduct: "
+        f"{product.name}"
     )
 
     print(
@@ -187,30 +251,34 @@ def update_stock():
     )
 
     print("\n1. Add Stock")
+
     print("2. Remove Stock")
 
     while True:
+
         choice = input(
             "Choose an option: "
         ).strip()
 
         if choice in ["1", "2"]:
+
             break
 
         print(
-            "Invalid option. "
             "Please enter 1 or 2."
         )
 
     quantity = get_integer(
         "Enter quantity: ",
-        minimum=1
+        1
     )
 
     if choice == "1":
+
         quantity_change = quantity
 
     else:
+
         quantity_change = -quantity
 
     success, message = (
@@ -220,9 +288,12 @@ def update_stock():
         )
     )
 
-    print(f"\n{message}")
+    print(
+        f"\n{message}"
+    )
 
     if success:
+
         print(
             f"New quantity: "
             f"{product.quantity}"
@@ -230,25 +301,35 @@ def update_stock():
 
 
 def view_low_stock_products():
-    low_stock_products = (
-        inventory.get_low_stock_products()
+
+    products = (
+        inventory
+        .get_low_stock_products()
     )
 
-    if len(low_stock_products) == 0:
+    if len(products) == 0:
+
         print(
             "\nAll products have "
             "sufficient stock."
         )
+
         return
 
-    print("\nLOW-STOCK ALERT")
+    print(
+        "\nLOW-STOCK ALERT"
+    )
+
     print("=" * 80)
 
-    for product in low_stock_products:
+    for product in products:
+
         print(
-            f"ID: {product.product_id} | "
-            f"Name: {product.name} | "
-            f"Current Stock: "
+            f"ID: "
+            f"{product.product_id} | "
+            f"Name: "
+            f"{product.name} | "
+            f"Stock: "
             f"{product.quantity} | "
             f"Reorder Level: "
             f"{product.reorder_level}"
@@ -256,27 +337,37 @@ def view_low_stock_products():
 
 
 def record_sale():
-    print("\nRECORD A NEW SALE")
-    print("-" * 55)
+
+    print(
+        "\nRECORD A NEW SALE"
+    )
 
     product_id = get_text(
         "Enter product ID: "
     )
 
-    product = inventory.search_product(
-        product_id
+    product = (
+        inventory.search_product(
+            product_id
+        )
     )
 
     if product is None:
-        print("\nProduct not found.")
+
+        print(
+            "\nProduct not found."
+        )
+
         return
 
     print(
-        f"\nProduct: {product.name}"
+        f"\nProduct: "
+        f"{product.name}"
     )
 
     print(
-        f"Selling price: Rs. "
+        f"Selling price: "
+        f"Rs. "
         f"{product.selling_price:.2f}"
     )
 
@@ -287,7 +378,7 @@ def record_sale():
 
     quantity_sold = get_integer(
         "Enter quantity sold: ",
-        minimum=1
+        1
     )
 
     success, message, sale = (
@@ -297,9 +388,12 @@ def record_sale():
         )
     )
 
-    print(f"\n{message}")
+    print(
+        f"\n{message}"
+    )
 
     if success:
+
         print("-" * 45)
 
         print(
@@ -333,15 +427,21 @@ def record_sale():
 
 
 def view_sales():
+
     inventory.view_sales()
 
 
 def show_dashboard():
+
     data = (
-        inventory.get_dashboard_data()
+        inventory
+        .get_dashboard_data()
     )
 
-    print("\nSALES DASHBOARD")
+    print(
+        "\nSALES DASHBOARD"
+    )
+
     print("=" * 55)
 
     print(
@@ -372,15 +472,19 @@ def show_dashboard():
     )
 
     if (
-        data["best_selling_product"]
+        data[
+            "best_selling_product"
+        ]
         is None
     ):
+
         print(
             "Best-Selling Product: "
             "No sales recorded"
         )
 
     else:
+
         print(
             f"Best-Selling Product: "
             f"{data['best_selling_product']}"
@@ -389,8 +493,141 @@ def show_dashboard():
     print("=" * 55)
 
 
-# Main program loop
+def update_product_details():
+
+    print(
+        "\nUPDATE PRODUCT DETAILS"
+    )
+
+    product_id = get_text(
+        "Enter product ID: "
+    )
+
+    product = (
+        inventory.search_product(
+            product_id
+        )
+    )
+
+    if product is None:
+
+        print(
+            "\nProduct not found."
+        )
+
+        return
+
+    print(
+        "\nCurrent product details:"
+    )
+
+    product.display_product()
+
+    print(
+        "\nEnter new product details:"
+    )
+
+    name = get_text(
+        "Enter new name: "
+    )
+
+    category = get_text(
+        "Enter new category: "
+    )
+
+    purchase_price = get_float(
+        "Enter new purchase price: ",
+        0
+    )
+
+    selling_price = get_float(
+        "Enter new selling price: ",
+        0
+    )
+
+    quantity = get_integer(
+        "Enter new quantity: ",
+        0
+    )
+
+    reorder_level = get_integer(
+        "Enter new reorder level: ",
+        0
+    )
+
+    success, message = (
+        inventory
+        .update_product_details(
+            product_id,
+            name,
+            category,
+            purchase_price,
+            selling_price,
+            quantity,
+            reorder_level
+        )
+    )
+
+    print(
+        f"\n{message}"
+    )
+
+
+def delete_product_from_system():
+
+    print(
+        "\nDELETE PRODUCT"
+    )
+
+    product_id = get_text(
+        "Enter product ID: "
+    )
+
+    product = (
+        inventory.search_product(
+            product_id
+        )
+    )
+
+    if product is None:
+
+        print(
+            "\nProduct not found."
+        )
+
+        return
+
+    print(
+        "\nProduct to delete:"
+    )
+
+    product.display_product()
+
+    confirmation = input(
+        "\nType YES to delete: "
+    ).strip()
+
+    if confirmation != "YES":
+
+        print(
+            "\nProduct deletion cancelled."
+        )
+
+        return
+
+    success, message = (
+        inventory.delete_product(
+            product_id
+        )
+    )
+
+    print(
+        f"\n{message}"
+    )
+
+
 while True:
+
     show_menu()
 
     choice = input(
@@ -398,39 +635,58 @@ while True:
     ).strip()
 
     if choice == "1":
+
         add_product()
 
     elif choice == "2":
+
         inventory.view_products()
 
     elif choice == "3":
+
         search_product()
 
     elif choice == "4":
+
         update_stock()
 
     elif choice == "5":
+
         view_low_stock_products()
 
     elif choice == "6":
+
         record_sale()
 
     elif choice == "7":
+
         view_sales()
 
     elif choice == "8":
+
         show_dashboard()
 
     elif choice == "9":
+
+        update_product_details()
+
+    elif choice == "10":
+
+        delete_product_from_system()
+
+    elif choice == "11":
+
         print(
             "\nThank you for using "
             "the system."
         )
+
         break
 
     else:
+
         print(
             "\nInvalid choice. "
             "Please enter a number "
-            "from 1 to 9."
+            "from 1 to 11."
         )
