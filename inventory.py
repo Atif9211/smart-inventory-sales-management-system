@@ -22,3 +22,15 @@ class Inventory:
                 f"Quantity: {product.quantity} | "
                 f"Price: Rs. {product.selling_price}"
             )
+
+    def search_product(self, search_value):
+        search_value = search_value.lower()
+
+        for product in self.products:
+            if (
+                str(product.product_id) == search_value
+                or search_value in product.name.lower()
+            ):
+                return product
+
+        return None
