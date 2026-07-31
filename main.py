@@ -16,7 +16,8 @@ def show_menu():
     print("5. View Low-Stock Products")
     print("6. Record a Sale")
     print("7. View Sales History")
-    print("8. Exit")
+    print("8. View Sales Dashboard")
+    print("9. Exit")
     print("=" * 55)
 
 
@@ -148,8 +149,16 @@ def record_sale():
 
     if success:
         print("-" * 40)
-        print(f"Product: {sale['product_name']}")
-        print(f"Quantity sold: {sale['quantity_sold']}")
+
+        print(
+            f"Product: "
+            f"{sale['product_name']}"
+        )
+
+        print(
+            f"Quantity sold: "
+            f"{sale['quantity_sold']}"
+        )
 
         print(
             f"Total amount: "
@@ -171,6 +180,52 @@ def record_sale():
 
 def view_sales():
     inventory.view_sales()
+
+
+def show_dashboard():
+    data = inventory.get_dashboard_data()
+
+    print("\nSALES DASHBOARD")
+    print("=" * 55)
+
+    print(
+        f"Total Products: "
+        f"{data['total_products']}"
+    )
+
+    print(
+        f"Total Stock Units: "
+        f"{data['total_stock_units']}"
+    )
+
+    print(
+        f"Total Units Sold: "
+        f"{data['total_units_sold']}"
+    )
+
+    print(
+        f"Total Revenue: "
+        f"Rs. {data['total_revenue']:.2f}"
+    )
+
+    print(
+        f"Total Profit: "
+        f"Rs. {data['total_profit']:.2f}"
+    )
+
+    if data["best_selling_product"] is None:
+        print(
+            "Best-Selling Product: "
+            "No sales recorded"
+        )
+
+    else:
+        print(
+            f"Best-Selling Product: "
+            f"{data['best_selling_product']}"
+        )
+
+    print("=" * 55)
 
 
 while True:
@@ -200,6 +255,9 @@ while True:
         view_sales()
 
     elif choice == "8":
+        show_dashboard()
+
+    elif choice == "9":
         print("\nThank you for using the system.")
         break
 

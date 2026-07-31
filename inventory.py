@@ -110,3 +110,50 @@ class Inventory:
                 f"Amount: Rs. {sale['total_amount']:.2f} | "
                 f"Profit: Rs. {sale['total_profit']:.2f}"
             )
+
+    def get_dashboard_data(self):
+        total_products = len(self.products)
+
+        total_stock_units = 0
+
+        for product in self.products:
+            total_stock_units += product.quantity
+
+        total_units_sold = 0
+        total_revenue = 0
+        total_profit = 0
+
+        for sale in self.sales:
+            total_units_sold += sale["quantity_sold"]
+            total_revenue += sale["total_amount"]
+            total_profit += sale["total_profit"]
+
+        best_selling_product = None
+
+        if len(self.sales) > 0:
+            product_sales = {}
+
+            for sale in self.sales:
+                product_name = sale["product_name"]
+                quantity = sale["quantity_sold"]
+
+                if product_name in product_sales:
+                    product_sales[product_name] += quantity
+                else:
+                    product_sales[product_name] = quantity
+
+            best_selling_product = max(
+                product_sales,
+                key=product_sales.get
+            )
+
+        dashboard_data = {
+            "total_products": total_products,
+            "total_stock_units": total_stock_units,
+            "total_units_sold": total_units_sold,
+            "total_revenue": total_revenue,
+            "total_profit": total_profit,
+            "best_selling_product": best_selling_product
+        }
+
+        return dashboard_data
