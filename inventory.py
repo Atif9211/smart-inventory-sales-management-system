@@ -3,7 +3,9 @@ from product import Product
 from database import (
     save_product,
     load_products,
-    update_product_quantity
+    update_product_quantity,
+    save_sale,
+    load_sales
 )
 
 
@@ -13,6 +15,7 @@ class Inventory:
         self.sales = []
 
         self.load_products_from_database()
+        self.load_sales_from_database()
 
     def load_products_from_database(self):
         product_rows = load_products()
@@ -29,6 +32,21 @@ class Inventory:
             )
 
             self.products.append(product)
+
+    def load_sales_from_database(self):
+        sale_rows = load_sales()
+
+        for row in sale_rows:
+            sale = {
+                "sale_id": row[0],
+                "product_id": row[1],
+                "product_name": row[2],
+                "quantity_sold": row[3],
+                "total_amount": row[4],
+                "total_profit": row[5]
+            }
+
+            self.sales.append(sale)
 
     def add_product(self, product):
         existing_product = self.search_product(
@@ -185,8 +203,16 @@ class Inventory:
             * quantity_sold
         )
 
+        # Reduce stock
         product.quantity -= quantity_sold
 
+        # Save the new stock quantity
+        update_product_quantity(
+            product.product_id,
+            product.quantity
+        )
+
+        # Create sale data
         sale = {
             "product_id":
                 product.product_id,
@@ -204,11 +230,16 @@ class Inventory:
                 total_profit
         }
 
+        # Save sale in SQLite
+        save_sale(sale)
+
+        # Save sale in Python list
         self.sales.append(sale)
 
         return (
             True,
-            "Sale recorded successfully.",
+            "Sale recorded and saved "
+            "to the database successfully.",
             sale
         )
 
@@ -221,7 +252,7 @@ class Inventory:
             return
 
         print("\nSALES HISTORY")
-        print("=" * 90)
+        print("=" * 95)
 
         for number, sale in enumerate(
             self.sales,

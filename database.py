@@ -15,6 +15,7 @@ def create_database():
 
     cursor = connection.cursor()
 
+    # Create products table
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS products (
             product_id INTEGER PRIMARY KEY,
@@ -27,11 +28,23 @@ def create_database():
         )
     """)
 
+    # Create sales table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS sales (
+            sale_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            product_id INTEGER NOT NULL,
+            product_name TEXT NOT NULL,
+            quantity_sold INTEGER NOT NULL,
+            total_amount REAL NOT NULL,
+            total_profit REAL NOT NULL
+        )
+    """)
+
     connection.commit()
 
     connection.close()
 
-    print("Database and products table are ready.")
+    print("Database tables are ready.")
 
 
 def save_product(product):
@@ -109,3 +122,54 @@ def update_product_quantity(
     connection.commit()
 
     connection.close()
+
+
+def save_sale(sale):
+    connection = get_connection()
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        INSERT INTO sales (
+            product_id,
+            product_name,
+            quantity_sold,
+            total_amount,
+            total_profit
+        )
+        VALUES (?, ?, ?, ?, ?)
+    """, (
+        sale["product_id"],
+        sale["product_name"],
+        sale["quantity_sold"],
+        sale["total_amount"],
+        sale["total_profit"]
+    ))
+
+    connection.commit()
+
+    connection.close()
+
+
+def load_sales():
+    connection = get_connection()
+
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT
+            sale_id,
+            product_id,
+            product_name,
+            quantity_sold,
+            total_amount,
+            total_profit
+        FROM sales
+        ORDER BY sale_id
+    """)
+
+    sales = cursor.fetchall()
+
+    connection.close()
+
+    return sales
